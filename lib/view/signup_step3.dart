@@ -1,0 +1,96 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hommie/controllers/signup_step3_controller.dart';
+import 'package:hommie/utils/app_colors.dart';
+
+class SignupStep3Screen extends StatelessWidget {
+  const SignupStep3Screen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<SignupStep3Controller>();
+
+    final baseInputDecoration = InputDecoration(
+      hintStyle: const TextStyle(color: AppColors.textSecondaryLight),
+      filled: true,
+      fillColor: AppColors.backgroundLight,
+      contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Colors.black, width: 1),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+      ),
+    );
+
+    return Scaffold(
+      backgroundColor: AppColors.backgroundLight,
+      appBar: AppBar(
+        backgroundColor: AppColors.primary,
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 30),
+                  const Text(
+                    'Enter your basic information:',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimaryLight),
+                  ),
+                  const SizedBox(height: 15),
+                  TextFormField(
+                    controller: controller.firstNameController,
+                    validator: controller.validateName,
+                    style: const TextStyle(color: AppColors.textPrimaryLight),
+                    decoration: baseInputDecoration.copyWith(hintText: 'First Name'),
+                  ),
+                  const SizedBox(height: 15),
+                  TextFormField(
+                    controller: controller.lastNameController,
+                    validator: controller.validateName,
+                    style: const TextStyle(color: AppColors.textPrimaryLight),
+                    decoration: baseInputDecoration.copyWith(hintText: 'Last Name'),
+                  ),
+                  const SizedBox(height: 15),
+                  TextFormField(
+                    controller: controller.dobController,
+                    validator: controller.validateDate,
+                    readOnly: true,
+                    onTap: () => controller.selectDateOfBirth(context),
+                    style: const TextStyle(color: AppColors.textPrimaryLight),
+                    decoration: baseInputDecoration.copyWith(hintText: 'Date of Birth (YYYY-MM-DD)'),
+                  ),
+                  const SizedBox(height: 40),
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: Obx(() => ElevatedButton(
+                      onPressed: controller.isLoading.value ? null : controller.goToStep3B,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      ),
+                      child: controller.isLoading.value
+                          ? const CircularProgressIndicator(color: AppColors.backgroundLight)
+                          : const Text('Next →', style: TextStyle(fontSize: 18, color: AppColors.backgroundLight)),
+                    )),
+                  ),
+                  const SizedBox(height: 50),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
